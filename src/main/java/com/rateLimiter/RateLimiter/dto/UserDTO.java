@@ -12,4 +12,5 @@ public class UserDTO {
     public Long id;
     public String username;
     public Long Transaction;
+    public Long userId;
 }

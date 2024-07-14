@@ -11,6 +11,9 @@ import com.rateLimiter.RateLimiter.repositories.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 public class UserService {
 
@@ -24,9 +27,12 @@ public class UserService {
         this.modelMapper = modelMapper;
     }
 
-    public UserDTO getUserTransactionsById(String userId) {
-        TransactionEntity transactionEntity= transactionRepository.getById(Long.valueOf(userId));
-        return modelMapper.map(transactionEntity,UserDTO.class);
+    public List<UserDTO> getUserTransactionsById(String userId) {
+        Long userIdLong = Long.valueOf(userId);
+        List<TransactionEntity> transactionEntities = transactionRepository.findAllByUserId(userIdLong);
+        return transactionEntities.stream()
+                .map(transactionEntity -> modelMapper.map(transactionEntity, UserDTO.class))
+                .collect(Collectors.toList());
     }
 
     public LoginDto createUser(LoginDto loginDTO) {
